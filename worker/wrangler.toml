@@ -5,7 +5,7 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 # Which origins may call this Worker. Add your GitHub Pages origin (no path, no trailing slash).
-ALLOWED_ORIGINS = "https://wilkth01.github.io,http://localhost:8080"
+ALLOWED_ORIGINS = "https://active-learning-library.tomwilk.net,https://wilkth01.github.io,http://localhost:8080"
 # The model and effort used for every request.
 MODEL = "claude-opus-5-5"
 EFFORT = "low"

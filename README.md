@@ -38,3 +38,8 @@ Without a Worker, each panel opens claude.ai with the prompt already written. Wi
 ## The classroom version of Keystone
 
 `play/keystone/` runs on one device: the clock, lock-in and reveal all happen in the browser, and the census data ships with the page. For a whole class with a shared clock, an instructor dashboard, a reveal hidden on the server, and CSV export, use [wilkth01/phil352-siting](https://github.com/wilkth01/phil352-siting).
+
+## Custom domain
+
+The site is served at **https://active-learning-library.tomwilk.net**. DNS for tomwilk.net is at Bluehost, which has a CNAME record `active-learning-library` → `wilkth01.github.io`, and the `CNAME` file in this repo tells GitHub Pages to answer for that name. Don't delete the `CNAME` file. The old `wilkth01.github.io/active-learning-library` address redirects here.
+

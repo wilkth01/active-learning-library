@@ -22,7 +22,7 @@ Wrangler prints the Worker's URL, something like `https://all-brainstorm.<you>.w
 window.ALL_CONFIG = { brainstormEndpoint: "https://all-brainstorm.<you>.workers.dev", requestsPerFormat: 3 };
 ```
 
-If the site is served from somewhere other than `https://wilkth01.github.io`, add that origin to `ALLOWED_ORIGINS` in `wrangler.toml` and redeploy.
+The site is served from `https://active-learning-library.tomwilk.net`, which is already in `ALLOWED_ORIGINS` along with `https://wilkth01.github.io`. If you serve it from anywhere else, add that origin to `ALLOWED_ORIGINS` in `wrangler.toml` and redeploy.
 
 ## Cost
 
