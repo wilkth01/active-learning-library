@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Three Slots · Active Learning Library</title><meta name="description" content="A hospital analytics team fills three care-management slots from twelve patients' claims. Then the charts turn over."><link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E7EFEB; --sheet:#FBFDFC; --ink:#12332B; --ink-soft:#4A655D; --rule:#BFD0C8;
+  --tab:#F2C230; --tab-ink:#3A2C00; --action:#12332B; --action-ink:#FBFDFC;
+  --black-series:#5B2A86; --white-series:#C76A00; --note:#DDE9E3;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#0E1F1A; --sheet:#16302A; --ink:#E6F1EC; --ink-soft:#9DB8AE; --rule:#2F4D44;
+    --tab:#F2C230; --tab-ink:#2A2000; --action:#E6F1EC; --action-ink:#0E1F1A;
+    --black-series:#C9A2F0; --white-series:#F5A742; --note:#1D3B33;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#0E1F1A; --sheet:#16302A; --ink:#E6F1EC; --ink-soft:#9DB8AE; --rule:#2F4D44;
+  --tab:#F2C230; --tab-ink:#2A2000; --action:#E6F1EC; --action-ink:#0E1F1A;
+  --black-series:#C9A2F0; --white-series:#F5A742; --note:#1D3B33;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5;
+  -webkit-text-size-adjust:100%}
+main{max-width:34rem;margin:0 auto;padding:1.25rem 1rem 7rem}
+h1,h2{font-family:"Bricolage Grotesque","Public Sans",system-ui,sans-serif;font-weight:700;line-height:1.08;margin:0 0 .75rem;letter-spacing:-.01em}
+h1{font-size:2.6rem}
+h2{font-size:1.75rem}
+h3{font-size:1rem;font-weight:700;margin:1.5rem 0 .4rem}
+p{margin:0 0 .9rem;max-width:36em}
+.soft{color:var(--ink-soft)}
+.num{font-variant-numeric:tabular-nums}
+
+/* the brief: a pinned order slip */
+.brief{background:var(--tab);color:var(--tab-ink);padding:1rem 1.1rem;border-radius:3px;margin:1.25rem 0;
+  font-family:"Bricolage Grotesque","Public Sans",sans-serif;font-weight:500;font-size:1.3rem;line-height:1.2}
+.brief small{display:block;font-family:"Public Sans",sans-serif;font-size:.85rem;font-weight:600;margin-bottom:.35rem}
+
+button{font:inherit;color:inherit;cursor:pointer}
+.go{display:block;width:100%;background:var(--action);color:var(--action-ink);border:0;border-radius:999px;
+  padding:.95rem 1.2rem;font-weight:700;font-size:1.05rem}
+.go[disabled]{opacity:.4;cursor:not-allowed}
+.plain{background:none;border:0;padding:.6rem 0;text-decoration:underline;color:var(--ink-soft);font-size:.95rem}
+:focus-visible{outline:3px solid var(--tab);outline-offset:3px}
+
+/* chart folders */
+.deck{display:grid;gap:1.1rem;margin-top:1.4rem}
+.chart{position:relative;display:block;width:100%;text-align:left;background:var(--sheet);border:1.5px solid var(--rule);
+  border-radius:0 6px 6px 6px;padding:.9rem 1rem 1rem;margin-top:1.5rem}
+.chart .tabname{position:absolute;left:-1.5px;top:-1.6rem;height:1.6rem;padding:.15rem .8rem 0;background:var(--sheet);
+  border:1.5px solid var(--rule);border-bottom:0;border-radius:6px 6px 0 0;font-weight:700;font-size:.9rem}
+.chart[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink)}
+.chart[aria-pressed="true"] .tabname{background:var(--tab);color:var(--tab-ink);border-color:var(--ink)}
+.who{color:var(--ink-soft);font-size:.92rem;margin-bottom:.5rem}
+.cost{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.9rem;line-height:1}
+.cost span{display:block;font-family:"Public Sans",sans-serif;font-weight:500;font-size:.85rem;color:var(--ink-soft);margin-top:.2rem}
+.use{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.8rem 0;padding:.6rem 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.use div{font-size:.82rem;color:var(--ink-soft);line-height:1.25}
+.use b{display:block;font-size:1.15rem;color:var(--ink)}
+.dx{font-size:.95rem}
+.dx b{font-weight:600}
+
+/* revealed charts */
+.chart.back{animation:turn .5s ease both}
+@keyframes turn{from{transform:rotateX(80deg);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion: reduce){.chart.back{animation:none}}
+.chart.back.in .tabname{background:var(--tab);color:var(--tab-ink)}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:.6rem .8rem;margin-top:.5rem}
+.facts div{font-size:.82rem;color:var(--ink-soft);line-height:1.25}
+.facts b{display:block;font-size:1.2rem;color:var(--ink);font-family:"Bricolage Grotesque",sans-serif}
+.race{display:inline-flex;align-items:center;gap:.4rem;font-weight:700}
+.mark{width:.8rem;height:.8rem;display:inline-block;flex:none}
+.mark.b{background:var(--black-series);transform:rotate(45deg)}
+.mark.w{background:var(--white-series);border-radius:50%}
+
+.tally{background:var(--sheet);border:1.5px solid var(--rule);border-radius:6px;margin:1.2rem 0}
+.tally div{display:flex;justify-content:space-between;gap:1rem;padding:.7rem 1rem;border-top:1px solid var(--rule);align-items:baseline}
+.tally div:first-child{border-top:0}
+.tally b{font-family:"Bricolage Grotesque",sans-serif;font-size:1.25rem;white-space:nowrap}
+.note{background:var(--note);border-left:4px solid var(--ink);padding:.9rem 1rem;margin:1.2rem 0;border-radius:0 4px 4px 0}
+.note p:last-child{margin-bottom:0}
+
+.versus{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin:1rem 0}
+.versus section{background:var(--sheet);border:1.5px solid var(--rule);border-radius:6px;padding:.8rem}
+.versus section.mine{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink)}
+.versus h3{margin:0 0 .4rem;font-size:.95rem}
+.versus .big{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.9rem;line-height:1}
+.versus p{font-size:.85rem;margin:.2rem 0 .6rem;color:var(--ink-soft)}
+
+figure{margin:1.2rem 0;background:var(--sheet);border:1.5px solid var(--rule);border-radius:6px;padding:.8rem .6rem .6rem}
+figure svg{display:block;width:100%;height:auto}
+figcaption{font-size:.88rem;color:var(--ink-soft);padding:.5rem .4rem 0}
+.legend{display:flex;gap:1.2rem;padding:0 .4rem .4rem;font-size:.88rem;font-weight:600}
+.legend span{display:inline-flex;align-items:center;gap:.4rem}
+
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin:1rem 0}
+.seg button{background:var(--sheet);border:1.5px solid var(--rule);border-radius:999px;padding:.6rem .3rem;font-weight:600;font-size:.92rem}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+ol.qs{padding-left:1.2rem;margin:0 0 1rem}
+ol.qs li{margin-bottom:.7rem}
+
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--paper);border-top:1.5px solid var(--rule);
+  padding:.7rem 1rem calc(.7rem + env(safe-area-inset-bottom,0px))}
+.bar .in{max-width:34rem;margin:0 auto;display:grid;gap:.45rem}
+.slots{display:flex;gap:.4rem;align-items:center;font-weight:600;font-size:.95rem}
+.slot{width:1.6rem;height:1.1rem;border:1.5px solid var(--ink);border-radius:3px}
+.slot.full{background:var(--tab)}
+.msg{font-size:.88rem;color:var(--ink-soft);min-height:1.2em}
+.src{font-size:.82rem;color:var(--ink-soft);margin-top:2rem;border-top:1px solid var(--rule);padding-top:.8rem}
+</style>
+<style>.shellbar{position:relative;z-index:60;background:#080d17;color:#a7b3c6;font:500 13px/1.2 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}.shellbar .in{max-width:1180px;margin:0 auto;padding:9px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center}.shellbar a{color:#e9eef6;text-decoration:none}.shellbar a:hover{color:#f2c94c}.shellbar a:focus-visible{outline:2px solid #f2c94c;outline-offset:2px}</style>
+</head>
+<body>
+<div class="shellbar"><div class="in"><a href="../index.html#play">&larr; Active Learning Library</a><a href="../format.html#blind-reveal">How to run it with a class</a></div></div>
+<main id="app"></main>
+<script>
+(function(){
+  var P = [
+    {id:"D",race:"W",age:67,sex:"man",ins:"Medicare",cost:41200,er:1,office:14,stays:1,dx:["Coronary artery disease","Heart failure","Hypertension","Diabetes","Arrhythmia"],next:38900,cond:5,a1c:6.9,sbp:134},
+    {id:"K",race:"W",age:58,sex:"woman",ins:"Commercial",cost:36500,er:0,office:19,stays:1,dx:["Breast cancer, in treatment","Hypothyroid"],next:35100,cond:2,a1c:5.6,sbp:122},
+    {id:"A",race:"W",age:72,sex:"man",ins:"Medicare",cost:33800,er:1,office:16,stays:1,dx:["Arthritis, spinal surgery","Arrhythmia","Hypertension"],next:31400,cond:3,a1c:6.0,sbp:131},
+    {id:"H",race:"W",age:49,sex:"woman",ins:"Commercial",cost:18900,er:0,office:12,stays:0,dx:["Arthritis","Depression"],next:17200,cond:2,a1c:5.5,sbp:118},
+    {id:"F",race:"W",age:61,sex:"man",ins:"Commercial",cost:12400,er:1,office:8,stays:0,dx:["Hypertension","High cholesterol"],next:11800,cond:2,a1c:5.9,sbp:134},
+    {id:"B",race:"W",age:44,sex:"woman",ins:"Commercial",cost:6300,er:0,office:6,stays:0,dx:["Hypothyroid"],next:5900,cond:1,a1c:5.4,sbp:116},
+    {id:"L",race:"W",age:55,sex:"man",ins:"Commercial",cost:4800,er:0,office:4,stays:0,dx:["Hypertension"],next:5200,cond:1,a1c:5.7,sbp:129},
+    {id:"E",race:"W",age:38,sex:"woman",ins:"Commercial",cost:2100,er:0,office:3,stays:0,dx:["None on file"],next:2400,cond:0,a1c:5.2,sbp:112},
+    {id:"G",race:"B",age:63,sex:"woman",ins:"Medicare",cost:29600,er:4,office:5,stays:1,dx:["Diabetes with complications","Kidney failure","Hypertension","Anemia","Heart failure"],next:30200,cond:6,a1c:9.1,sbp:158},
+    {id:"C",race:"B",age:57,sex:"man",ins:"Commercial",cost:17300,er:3,office:4,stays:1,dx:["Diabetes","Hypertension","Early kidney disease","Obesity","Lung disease"],next:18100,cond:5,a1c:8.4,sbp:152},
+    {id:"J",race:"B",age:52,sex:"woman",ins:"Commercial",cost:11700,er:2,office:3,stays:0,dx:["Diabetes","Hypertension","Obesity","Anemia"],next:12300,cond:4,a1c:7.9,sbp:147},
+    {id:"I",race:"B",age:46,sex:"man",ins:"Commercial",cost:5400,er:1,office:2,stays:0,dx:["Hypertension","Obesity"],next:5100,cond:2,a1c:6.1,sbp:141}
+  ];
+  var BRIEF = {
+    cost:"Enroll the three patients who will cost the health system the most next year.",
+    health:"Enroll the three patients who will be sickest next year."
+  };
+  var KEY = "three-slots-v1";
+  var app = document.getElementById("app");
+  function hashMission(){ var h=(location.hash||"").replace("#",""); return (h==="cost"||h==="health")?h:null; }
+  var S = load(), H = hashMission();
+  if(!S || (H && S.mission!==H)) S = fresh();
+  var returning = S.step>0;
+
+  function fresh(){
+    var h = (location.hash||"").replace("#","");
+    var mission = (h==="cost"||h==="health") ? h : (Math.random()<0.5 ? "cost" : "health");
+    var order = P.map(function(p){return p.id;});
+    for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=order[i];order[i]=order[j];order[j]=t;}
+    return {mission:mission,order:order,picks:[],step:0,theory:"bentham",msg:""};
+  }
+  function load(){ try{ var s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.mission&&s.order&&s.order.length===P.length) return s; }catch(e){} return null; }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+  function byId(id){ for(var i=0;i<P.length;i++) if(P[i].id===id) return P[i]; }
+  function money(n){ return "$"+n.toLocaleString("en-US"); }
+  function avg(a,f){ return a.length ? a.reduce(function(s,x){return s+f(x);},0)/a.length : 0; }
+  function sum(a,f){ return a.reduce(function(s,x){return s+f(x);},0); }
+  function best(f){ return P.slice().sort(function(a,b){return f(b)-f(a);}).slice(0,3); }
+  function raceTag(p){ return '<span class="race"><i class="mark '+(p.race==="B"?"b":"w")+'"></i>'+(p.race==="B"?"Black":"White")+'</span>'; }
+  function go(step){ returning=false; S.step=step; S.msg=""; save(); render(); window.scrollTo(0,0); }
+
+  function front(p){
+    var on = S.picks.indexOf(p.id)>=0;
+    return '<button class="chart" data-pick="'+p.id+'" aria-pressed="'+on+'">'+
+      '<span class="tabname">Patient '+p.id+(on?" · enrolled":"")+'</span>'+
+      '<div class="who">'+p.age+'-year-old '+p.sex+', '+p.ins+'</div>'+
+      '<div class="cost num">'+money(p.cost)+'<span>total cost of care last year</span></div>'+
+      '<div class="use num"><div><b>'+p.er+'</b>ER visits</div><div><b>'+p.office+'</b>office visits</div><div><b>'+p.stays+'</b>hospital stays</div></div>'+
+      '<div class="dx"><b>Diagnoses on last year’s claims:</b> '+p.dx.join(", ")+'</div>'+
+    '</button>';
+  }
+  function back(p,i){
+    var on = S.picks.indexOf(p.id)>=0;
+    return '<div class="chart back'+(on?" in":"")+'" style="animation-delay:'+(i*70)+'ms">'+
+      '<span class="tabname">Patient '+p.id+(on?" · enrolled":" · passed over")+'</span>'+
+      '<div class="who">'+p.age+'-year-old '+p.sex+', '+p.ins+'</div>'+
+      '<div class="facts num">'+
+        '<div><b>'+p.cond+'</b>active chronic conditions</div>'+
+        '<div><b>'+money(p.next)+'</b>cost of care this year</div>'+
+        '<div><b>'+p.a1c.toFixed(1)+'%</b>HbA1c (blood sugar)</div>'+
+        '<div><b>'+p.sbp+'</b>systolic blood pressure</div>'+
+      '</div>'+
+      '<div style="margin-top:.7rem">'+raceTag(p)+' <span class="soft" style="font-size:.85rem">self-identified</span></div>'+
+    '</div>';
+  }
+
+  function intro(){
+    return '<h1>Three slots</h1>'+
+      '<p>You are the analytics team at a large hospital. The care management program gives its patients extra nurses, extra appointments and closer follow-up. It is expensive, and it has three open slots.</p>'+
+      '<p>Twelve patients are eligible. You will see what the hospital’s software sees: each patient’s insurance claims from last year.</p>'+
+      '<div class="brief"><small>Your brief</small>'+BRIEF[S.mission]+'</div>'+
+      '<p class="soft">Work with your group. Agree on three names before you lock anything in.</p>'+
+      '<button class="go" data-go="1">Open the patient charts</button>';
+  }
+
+  function sort(){
+    var cards = S.order.map(function(id){return front(byId(id));}).join("");
+    var slots=""; for(var i=0;i<3;i++) slots+='<i class="slot'+(i<S.picks.length?" full":"")+'"></i>';
+    return '<h2>Choose three patients</h2>'+
+      '<div class="brief" style="font-size:1.05rem"><small>Your brief</small>'+BRIEF[S.mission]+'</div>'+
+      '<p class="soft">Tap a chart to enroll that patient. Tap again to free the slot.</p>'+
+      '<div class="deck">'+cards+'</div>'+
+      '<div class="bar"><div class="in">'+
+        '<div class="slots">'+slots+'<span class="num">'+S.picks.length+' of 3 slots filled</span></div>'+
+        '<div class="msg" role="status">'+(S.msg||"")+'</div>'+
+        '<button class="go" data-lock="1"'+(S.picks.length===3?"":" disabled")+'>Lock in these three</button>'+
+      '</div></div>';
+  }
+
+  function reveal(){
+    var ins = S.picks.map(byId), outs = P.filter(function(p){return S.picks.indexOf(p.id)<0;})
+      .sort(function(a,b){return b.cond-a.cond;});
+    var nb = ins.filter(function(p){return p.race==="B";}).length;
+    var worst = outs[0];
+    var line = (S.mission==="cost"?"Cost brief":"Sickest brief")+": "+nb+" of 3 Black, "+avg(ins,function(p){return p.cond;}).toFixed(1)+" conditions";
+    return '<h2>One year later</h2>'+
+      '<p>The charts now show what the software could not see when you chose: how sick each patient turned out to be, and each patient’s race. Race was never in the claims data you were given.</p>'+
+      '<div class="tally num">'+
+        '<div><span>Black patients on your roster</span><b>'+nb+' of 3</b></div>'+
+        '<div><span>Black patients in the full group</span><b>4 of 12</b></div>'+
+        '<div><span>Average chronic conditions, enrolled</span><b>'+avg(ins,function(p){return p.cond;}).toFixed(1)+'</b></div>'+
+        '<div><span>Average chronic conditions, passed over</span><b>'+avg(outs,function(p){return p.cond;}).toFixed(1)+'</b></div>'+
+        '<div><span>Sickest patient you passed over</span><b>'+worst.id+', '+worst.cond+' conditions</b></div>'+
+      '</div>'+
+      '<h3>Your roster</h3><div class="deck">'+ins.map(back).join("")+'</div>'+
+      '<h3 style="margin-top:2rem">Passed over, sickest first</h3><div class="deck">'+outs.map(function(p,i){return back(p,i+3);}).join("")+'</div>'+
+      '<div class="note"><p><b>Stop here.</b> Give your instructor this line for the board:</p><p class="num"><b>'+line+'</b></p></div>'+
+      '<button class="go" data-go="3">Our instructor said to go on</button>';
+  }
+
+  function chart(){
+    var W=340,H=250,l=46,r=12,t=12,b=38, x=function(c){return l+(c/6)*(W-l-r);}, y=function(v){return H-b-(v/45000)*(H-t-b);};
+    var g="";
+    [0,15000,30000,45000].forEach(function(v){ g+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--rule)" stroke-width="1"/>'+
+      '<text x="'+(l-6)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="11" fill="var(--ink-soft)">$'+(v/1000)+'k</text>'; });
+    for(var c=0;c<=6;c++) g+='<text x="'+x(c)+'" y="'+(H-b+16)+'" text-anchor="middle" font-size="11" fill="var(--ink-soft)">'+c+'</text>';
+    g+='<text x="'+((l+W-r)/2)+'" y="'+(H-4)+'" text-anchor="middle" font-size="11.5" fill="var(--ink-soft)">Active chronic conditions</text>';
+    P.forEach(function(p){
+      var cx=x(p.cond), cy=y(p.next), picked=S.picks.indexOf(p.id)>=0;
+      if(picked) g+='<circle cx="'+cx+'" cy="'+cy+'" r="12" fill="none" stroke="var(--ink)" stroke-width="1.5"/>';
+      if(p.race==="B") g+='<rect x="'+(cx-6)+'" y="'+(cy-6)+'" width="12" height="12" transform="rotate(45 '+cx+' '+cy+')" fill="var(--black-series)"/>';
+      else g+='<circle cx="'+cx+'" cy="'+cy+'" r="6.5" fill="var(--white-series)"/>';
+    });
+    return '<figure><div class="legend"><span><i class="mark b"></i>Black patients</span><span><i class="mark w"></i>White patients</span></div>'+
+      '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Scatter plot of this year’s cost of care against number of chronic conditions for the twelve patients. At the same number of conditions, Black patients have lower costs than White patients.">'+g+'</svg>'+
+      '<figcaption>This year’s cost of care for all twelve patients. Rings mark your roster. Read across any column: same number of conditions, less money spent.</figcaption></figure>';
+  }
+
+  function twist(){
+    var bc=best(function(p){return p.next;}), bh=best(function(p){return p.cond;});
+    var ins=S.picks.map(byId);
+    function col(title,brief,r,mine){
+      return '<section'+(mine?' class="mine"':'')+'><h3>'+title+(mine?" (yours)":"")+'</h3><p>“'+brief+'”</p>'+
+        '<div class="big num">'+r.filter(function(p){return p.race==="B";}).length+' of 3</div><p>Black patients on the best possible roster</p>'+
+        '<div class="big num">'+avg(r,function(p){return p.cond;}).toFixed(1)+'</div><p>average chronic conditions</p></section>';
+    }
+    var acc = S.mission==="cost"
+      ? 'Your three patients cost '+money(sum(ins,function(p){return p.next;}))+' this year. The most any roster could have captured was '+money(sum(bc,function(p){return p.next;}))+'.'
+      : 'Your three patients have '+sum(ins,function(p){return p.cond;})+' chronic conditions between them. The most any roster could have captured was '+sum(bh,function(p){return p.cond;})+'.';
+    return '<h2>Half the room had a different brief</h2>'+
+      '<p>Every group saw the same twelve charts. The only thing that differed was one sentence.</p>'+
+      '<div class="versus">'+col("Cost brief",BRIEF.cost,bc,S.mission==="cost")+col("Sickest brief",BRIEF.health,bh,S.mission==="health")+'</div>'+
+      '<h3>Did you do your job well?</h3><p>'+acc+'</p>'+
+      '<p>A cost team can predict cost almost perfectly and still leave the sickest patients out. Nobody saw race, and nobody made an arithmetic mistake.</p>'+
+      '<h3>Where the gap comes from</h3>'+chart()+
+      '<p>Cost measures the care a patient received. It does not measure the care a patient needed. When some patients get less care for the same illness, a system that ranks by cost ranks them as healthier than they are.</p>'+
+      '<button class="go" data-go="4">See the real case</button>';
+  }
+
+  function real(){
+    return '<h2>This happened</h2>'+
+      '<p>In 2019 researchers examined a commercial algorithm that hospitals used to decide who got into care management programs. Tools of its kind were applied to about 200 million people in the United States each year.</p>'+
+      '<div class="tally num">'+
+        '<div><span>What the algorithm was built to predict</span><b>Next year’s cost</b></div>'+
+        '<div><span>Did it use race?</span><b>No</b></div>'+
+        '<div><span>Did it predict cost accurately for both groups?</span><b>Yes</b></div>'+
+        '<div><span>Chronic conditions at the automatic-enrollment cutoff, White patients</span><b>3.8</b></div>'+
+        '<div><span>Same cutoff, Black patients</span><b>4.8</b></div>'+
+        '<div><span>Yearly spending on Black patients compared with equally sick White patients</span><b>$1,801 less</b></div>'+
+        '<div><span>Black share of automatic enrollees</span><b>17.7%</b></div>'+
+        '<div><span>Share if enrollment tracked illness instead</span><b>46.5%</b></div>'+
+      '</div>'+
+      '<p>The company had made a reasonable, industry-standard choice. When the researchers told it what they had found, it checked its own data, confirmed the result, and worked with them on a fix.</p>'+
+      '<p class="soft">Your twelve charts were invented for this exercise. They follow the pattern in the study, with the gaps made larger so they show up in a group this small. Black patients were also a third of your group, against about 12% in the study.</p>'+
+      '<button class="go" data-go="5">Argue about it</button>';
+  }
+
+  var THEORY = {
+    bentham:{name:"Bentham",qs:[
+      "The algorithm adds up dollars the way Bentham’s procedure adds up pleasures and pains. Is predicting cost a faithful use of the principle of utility, or a corruption of it?",
+      "The cost brief sent help to patients who needed it less. Can a utilitarian condemn that without ever mentioning fairness?",
+      "Suppose ranking by cost had happened to produce the most welfare overall. Would anything still be wrong?"]},
+    kant:{name:"Kant",qs:[
+      "The company meant no harm, left race out, and helped fix the problem. If moral worth lies in the will and not the result, is the company blameless?",
+      "Does ranking patients by what they are expected to cost treat them merely as means?",
+      "State the maxim the hospital acted on. Could it be willed as a universal law?"]},
+    princ:{name:"Principlism",qs:[
+      "The program was built to do good for patients. Which of the four principles did it serve, and which did it fail?",
+      "When beneficence and justice pull apart here, what in principlism tells you which one wins?",
+      "Is “who needs help most” a fact to be measured, or a judgment someone has to make? Who should make it?"]}
+  };
+  function argue(){
+    var t=THEORY[S.theory]||THEORY.bentham, seg="";
+    Object.keys(THEORY).forEach(function(k){ seg+='<button data-theory="'+k+'" aria-pressed="'+(k===S.theory)+'">'+THEORY[k].name+'</button>'; });
+    return '<h2>Was anything done wrong, and by whom?</h2>'+
+      '<p>Your instructor will assign your group a theory. You have three minutes to reach a verdict you can defend.</p>'+
+      '<div class="seg">'+seg+'</div>'+
+      '<ol class="qs">'+t.qs.map(function(q){return "<li>"+q+"</li>";}).join("")+'</ol>'+
+      '<div class="note"><p><b>Before you leave,</b> finish this sentence on paper:</p><p>The choice to predict cost was, or was not, morally wrong because…</p></div>'+
+      '<button class="plain" data-go="3">Back to the comparison</button><br>'+
+      '<button class="plain" data-reset="1">Start over with new charts</button>'+
+      '<p class="src">Based on Obermeyer, Powers, Vogeli and Mullainathan, “Dissecting racial bias in an algorithm used to manage the health of populations,” Science 366 (2019).</p>';
+  }
+
+  function render(){
+    var banner = returning ? '<div class="note"><p>This device is picking up where it left off.</p><button class="plain" data-reset="1">Start over with new charts</button></div>' : '';
+    app.innerHTML = banner + [intro,sort,reveal,twist,real,argue][S.step]();
+  }
+  app.addEventListener("click",function(e){
+    var el=e.target.closest("button"); if(!el) return;
+    if(el.dataset.go){ go(+el.dataset.go); return; }
+    if(el.dataset.pick){
+      var id=el.dataset.pick, i=S.picks.indexOf(id), y=window.scrollY;
+      if(i>=0){ S.picks.splice(i,1); S.msg=""; }
+      else if(S.picks.length<3){ S.picks.push(id); S.msg=""; }
+      else { S.msg="All three slots are full. Tap an enrolled patient to free one."; }
+      save(); render(); window.scrollTo(0,y); return;
+    }
+    if(el.dataset.lock && S.picks.length===3){ go(2); return; }
+    if(el.dataset.theory){ S.theory=el.dataset.theory; save(); var y2=window.scrollY; render(); window.scrollTo(0,y2); return; }
+    if(el.dataset.reset){ try{localStorage.removeItem(KEY);}catch(err){} returning=false; S=fresh(); save(); render(); window.scrollTo(0,0); }
+  });
+  window.addEventListener("hashchange",function(){ var m=hashMission(); if(m && m!==S.mission){ returning=false; S=fresh(); save(); render(); window.scrollTo(0,0); } });
+  save(); render();
+})();
+</script>
+</body>
+</html>

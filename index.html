@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Active Learning Library</title>
+<meta name="description" content="Twenty-six in-class formats from a semester of philosophy and nursing seminars at Widener University: how each one runs, why it works, the original builds, four activities you can play in a browser, and a small Claude brainstorm for adapting any of them to your own course.">
+<meta property="og:title" content="Active Learning Library">
+<meta property="og:description" content="Twenty-six classroom formats that make the room do the philosophy, with playable activities and a Claude brainstorm for adapting them.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0d1422">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Active Learning Library, home">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect x="3" y="6" width="26" height="18" rx="2" stroke="#f2c94c" stroke-width="1.6"/><path d="M8 12h10M8 16h14M8 20h7" stroke="#f2c94c" stroke-width="1.3" stroke-linecap="round" opacity=".8"/><path d="M11 24l-3 5M21 24l3 5" stroke="#f2c94c" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Active Learning Library
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">Menu</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#idea">The idea</a></li>
+      <li><a href="#play">Play one</a></li>
+      <li><a href="#library">The library</a></li>
+      <li><a href="#brainstorm">Brainstorm</a></li>
+      <li><a href="#notes">Notes</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-wall" id="heroWall" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="hero-inner">
+      <p class="kicker">Fall 2026 &middot; Widener University &middot; Philosophy &amp; Nursing</p>
+      <h1>Make the room<br>do the <em>philosophy</em>.</h1>
+      <p class="lede">Every in-class exercise from one semester across three courses, filed by the structure underneath it. <strong>Each format comes with how it runs, why it works and what goes wrong</strong>, plus the original builds, four activities you can play in a browser, and a small Claude brainstorm for adapting any of them to your own class.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#library">Browse the formats
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10m0 0 4-4m-4 4L4 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="btn btn-ghost" href="#play">Play an activity</a>
+      </div>
+      <div class="board-note" role="note"><span class="who">house rule:</span><span>Nobody says the easy word until the strongest defense is on the board.</span></div>
+    </div>
+  </div>
+  <div class="hero-meta" aria-hidden="true">
+    <div class="wrap"><span>PHIL 350 &middot; PHIL 352 &middot; NURS 702</span><span>Decide &rarr; commit &rarr; reveal &rarr; argue</span></div>
+  </div>
+</section>
+
+<section class="stats" aria-label="The library at a glance">
+  <div class="wrap">
+    <ul>
+      <li><b id="statFormats">26</b><span>formats, each one reusable on a new topic</span></li>
+      <li><b id="statRuns">56</b><span>classroom runs behind them, from one semester</span></li>
+      <li><b>4</b><span>activities you can play in a browser, right now</span></li>
+      <li><b>3</b><span>courses: two philosophy, one graduate nursing</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ IDEA ============ -->
+<section class="section" id="idea">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="kicker">The idea</p>
+      <h2>Put students in the position the reading is about, before they read it.</h2>
+    </div>
+    <div class="idea-grid">
+      <div class="body reveal">
+        <p>Most discussion fails in the same way. The case does the moral work, everyone agrees in thirty seconds, and the next forty minutes are spent saying nothing philosophical. The fix is rarely a better question. It’s a better structure: something students have to decide, sort, rule on or defend before the theory arrives.</p>
+        <p>This semester I kept noticing that my activities were variations on a small number of moves. Groups pick a site for a waste facility using ordinary business criteria, lock in, then see the census data. Students apply a court’s test exactly as written and watch it fail the plaintiffs. Triads vote on a rule from the seat they were dealt, then rewrite it without knowing which seat they’ll get.</p>
+        <p>So I filed them by structure instead of by week. Each format here names the slots you swap out (the case, the cards, the reveal) and the ways it goes wrong, so you can lift it into a different course without inheriting my readings.</p>
+      </div>
+      <aside class="reveal">
+        <figure class="pull">
+          <blockquote>The question opens the exchange. What you do with the answer is the assessment.</blockquote>
+          <figcaption>From the Board of Review rubric</figcaption>
+        </figure>
+        <div class="idea-note">
+          <b>Where these were run.</b> Every format below was used at least once, in one of three rooms:
+          <ul class="course-list">
+            <li><span class="code">PHIL 350</span><span>Ethics cases from clinical care and medical technology</span></li>
+            <li><span class="code">PHIL 352</span><span>Business ethics and corporate power</span></li>
+            <li><span class="code">NURS 702</span><span>A graduate seminar on what counts as nursing knowledge</span></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PLAY ============ -->
+<section class="section section-dark" id="play">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="kicker">Play one</p>
+      <h2>Four activities that run in a browser.</h2>
+      <p class="lede">These were built for phones and laptops in the room. Nothing you type leaves your device. Try one on your own first: the reveal works on you too.</p>
+    </div>
+    <div class="play-grid">
+      <a class="play-card reveal" href="play/keystone/">
+        <div class="play-shot" aria-hidden="true">
+          <svg viewBox="0 0 640 300" preserveAspectRatio="xMidYMid slice"><rect width="640" height="300" fill="#ecebe6"/><path d="M-10 250 C 120 220, 220 280, 360 250 S 560 225, 650 255 L650 310 L-10 310Z" fill="#b9d3e6"/><g stroke="#fff" stroke-width="4">
+            <line x1="40" y1="0" x2="40" y2="230"/><line x1="100" y1="0" x2="100" y2="230"/><line x1="160" y1="0" x2="160" y2="230"/><line x1="520" y1="0" x2="520" y2="230"/><line x1="580" y1="0" x2="580" y2="230"/><line x1="0" y1="40" x2="640" y2="40"/><line x1="0" y1="200" x2="640" y2="200"/></g>
+            <g fill="#b9aea0"><rect x="50" y="55" width="12" height="12" rx="2"/><rect x="72" y="80" width="12" height="12" rx="2"/><rect x="112" y="60" width="12" height="12" rx="2"/><rect x="120" y="150" width="12" height="12" rx="2"/><rect x="60" y="170" width="12" height="12" rx="2"/><rect x="530" y="70" width="12" height="12" rx="2"/><rect x="548" y="150" width="12" height="12" rx="2"/><rect x="595" y="100" width="12" height="12" rx="2"/><rect x="10" y="110" width="12" height="12" rx="2"/></g>
+            <path d="M470 0 C 450 100, 480 190, 430 300" stroke="#f0c94a" stroke-width="12" fill="none"/>
+            <rect x="230" y="80" width="180" height="110" rx="6" fill="rgba(224,112,58,.2)" stroke="#e0703a" stroke-width="3" stroke-dasharray="9 6"/>
+            <text x="320" y="142" font-family="Inter,sans-serif" font-size="20" font-weight="700" fill="#b4531f" text-anchor="middle">PARCEL</text>
+            <rect x="24" y="240" width="190" height="40" rx="6" fill="#0d1422"/><text x="40" y="266" font-family="JetBrains Mono,monospace" font-size="15" fill="#f2c94c">14:59 · LOCK IN</text></svg>
+        </div>
+        <div class="play-body">
+          <span class="play-meta">PHIL 352 &middot; groups &middot; 15 min + debrief</span>
+          <h3>Project Keystone</h3>
+          <p>Your siting team has four candidate sites for a waste-transfer facility and a CEO who wants it fast, cheap and low-risk. Pick one, lock it in, then open the census appendix.</p>
+          <span class="play-go">Open the siting meeting &rarr;</span>
+        </div>
+      </a>
+      <a class="play-card reveal" href="play/three-slots.html">
+        <div class="play-shot" aria-hidden="true">
+          <svg viewBox="0 0 640 300" preserveAspectRatio="xMidYMid slice"><rect width="640" height="300" fill="#e7efeb"/>
+            <g font-family="Inter,sans-serif"><g transform="translate(40 60) rotate(-4)"><rect y="-22" width="90" height="24" rx="5" fill="#fbfdfc" stroke="#bfd0c8" stroke-width="2"/><text x="12" y="-5" font-size="13" font-weight="700" fill="#12332b">Patient G</text><rect width="170" height="190" rx="6" fill="#fbfdfc" stroke="#bfd0c8" stroke-width="2"/><text x="16" y="44" font-size="30" font-weight="700" fill="#12332b">$29,600</text><text x="16" y="66" font-size="12" fill="#4a655d">cost of care last year</text><line x1="16" y1="86" x2="154" y2="86" stroke="#bfd0c8"/><text x="16" y="112" font-size="12" fill="#4a655d">4 ER · 5 office · 1 stay</text></g>
+            <g transform="translate(235 50)"><rect y="-22" width="140" height="24" rx="5" fill="#f2c230" stroke="#12332b" stroke-width="2"/><text x="12" y="-5" font-size="13" font-weight="700" fill="#3a2c00">Patient D · enrolled</text><rect width="170" height="190" rx="6" fill="#fbfdfc" stroke="#12332b" stroke-width="3"/><text x="16" y="44" font-size="30" font-weight="700" fill="#12332b">$41,200</text><text x="16" y="66" font-size="12" fill="#4a655d">cost of care last year</text><line x1="16" y1="86" x2="154" y2="86" stroke="#bfd0c8"/><text x="16" y="112" font-size="12" fill="#4a655d">1 ER · 14 office · 1 stay</text></g>
+            <g transform="translate(430 64) rotate(5)"><rect y="-22" width="90" height="24" rx="5" fill="#fbfdfc" stroke="#bfd0c8" stroke-width="2"/><text x="12" y="-5" font-size="13" font-weight="700" fill="#12332b">Patient C</text><rect width="170" height="190" rx="6" fill="#fbfdfc" stroke="#bfd0c8" stroke-width="2"/><text x="16" y="44" font-size="30" font-weight="700" fill="#12332b">$17,300</text><text x="16" y="66" font-size="12" fill="#4a655d">cost of care last year</text></g></g>
+            <g transform="translate(250 272)"><rect width="26" height="16" rx="3" fill="#f2c230" stroke="#12332b" stroke-width="2"/><rect x="34" width="26" height="16" rx="3" fill="none" stroke="#12332b" stroke-width="2"/><rect x="68" width="26" height="16" rx="3" fill="none" stroke="#12332b" stroke-width="2"/></g></svg>
+        </div>
+        <div class="play-body">
+          <span class="play-meta">PHIL 350 &middot; groups &middot; 25 min</span>
+          <h3>Three Slots</h3>
+          <p>You’re a hospital analytics team with three care-management slots and twelve patients’ insurance claims. Fill the slots from your brief. A year later, the charts turn over.</p>
+          <span class="play-go">Open the patient charts &rarr;</span>
+        </div>
+      </a>
+      <a class="play-card reveal" href="play/making-rate.html">
+        <div class="play-shot" aria-hidden="true">
+          <svg viewBox="0 0 640 300" preserveAspectRatio="xMidYMid slice"><rect width="640" height="300" fill="#14181c"/>
+            <g font-family="JetBrains Mono,monospace"><rect x="40" y="36" width="170" height="70" rx="8" fill="#1d2329" stroke="#2f3841"/><text x="56" y="62" font-size="12" fill="#93a0ab">TIME LEFT</text><text x="56" y="92" font-size="26" fill="#e8ecef" font-weight="700">0:41</text>
+            <rect x="235" y="36" width="170" height="70" rx="8" fill="#1d2329" stroke="#2f3841"/><text x="251" y="62" font-size="12" fill="#93a0ab">UNITS</text><text x="251" y="92" font-size="26" fill="#e8ecef" font-weight="700">27</text>
+            <rect x="430" y="36" width="170" height="70" rx="8" fill="#1d2329" stroke="#2f3841"/><text x="446" y="62" font-size="12" fill="#93a0ab">OF EXPECTATION</text><text x="446" y="92" font-size="26" fill="#e5484d" font-weight="700">87%</text>
+            <rect x="40" y="126" width="560" height="16" rx="4" fill="#1d2329" stroke="#2f3841"/><rect x="40" y="126" width="406" height="16" rx="4" fill="#e5484d"/><line x1="507" y1="120" x2="507" y2="148" stroke="#e8ecef" stroke-width="2"/>
+            <rect x="40" y="162" width="190" height="24" rx="4" fill="none" stroke="#e5484d"/><text x="52" y="179" font-size="12" fill="#e5484d">TIME OFF TASK 0:07</text>
+            <rect x="40" y="204" width="560" height="74" rx="8" fill="#1d2329" stroke="#f29d38" stroke-width="2"/><text x="58" y="232" font-size="13" fill="#f29d38">HEAVY · TEAM LIFT REQUIRED</text><text x="58" y="262" font-size="20" fill="#e8ecef" font-family="Inter,sans-serif" font-weight="700">Dog food, 40 lb case</text><text x="470" y="262" font-size="34" fill="#f2c230" font-weight="700">B3</text></g></svg>
+        </div>
+        <div class="play-body">
+          <span class="play-meta">PHIL 352 &middot; phones &middot; 9 min</span>
+          <h3>Making Rate</h3>
+          <p>A training shift, then a peak shift under a quota set from your own best fifteen seconds. Team lifts cost time. So does the restroom. The notice is automatic, and so is the reply to your appeal.</p>
+          <span class="play-go">Start your shift &rarr;</span>
+        </div>
+      </a>
+      <a class="play-card reveal" href="play/sort-the-conduct.html">
+        <div class="play-shot" aria-hidden="true">
+          <svg viewBox="0 0 640 300" preserveAspectRatio="xMidYMid slice"><rect width="640" height="300" fill="#14222f"/>
+            <g font-family="Inter,sans-serif"><rect x="40" y="34" width="560" height="112" rx="10" fill="#1d3040" stroke="#3a4f61"/><text x="62" y="78" font-family="Georgia,serif" font-size="34" font-weight="700" fill="#e0703a">1</text><text x="100" y="66" font-size="16" fill="#f4f1ea">Telling doctors that fewer than one percent</text><text x="100" y="88" font-size="16" fill="#f4f1ea">of patients become addicted.</text>
+            <g font-size="12"><rect x="100" y="104" width="112" height="28" rx="6" fill="none" stroke="#f08a8a"/><text x="112" y="122" fill="#f08a8a">Illegal</text><rect x="222" y="104" width="112" height="28" rx="6" fill="#f4f1ea"/><text x="234" y="122" fill="#14222f" font-weight="700">Legal, contested</text><rect x="344" y="104" width="112" height="28" rx="6" fill="none" stroke="#7fc4e8"/><text x="356" y="122" fill="#7fc4e8">Legal, uncontested</text><rect x="466" y="104" width="112" height="28" rx="6" fill="none" stroke="#a9b8c6"/><text x="478" y="122" fill="#a9b8c6">Article doesn’t say</text></g>
+            <rect x="40" y="166" width="560" height="112" rx="10" fill="#1d3040" stroke="#3a4f61" opacity=".7"/><text x="62" y="210" font-family="Georgia,serif" font-size="34" font-weight="700" fill="#e0703a" opacity=".7">8</text><text x="100" y="198" font-size="16" fill="#f4f1ea" opacity=".7">Settling a county’s suit for $24 million with</text><text x="100" y="220" font-size="16" fill="#f4f1ea" opacity=".7">no admission, and sealing the record.</text></g></svg>
+        </div>
+        <div class="play-body">
+          <span class="play-meta">PHIL 352 &middot; groups &middot; 12 min</span>
+          <h3>Sort the Conduct</h3>
+          <p>Ten things Purdue Pharma and the Sacklers did, four piles, one of them for “the article doesn’t say.” Mark your hardest card and be ready to defend it.</p>
+          <span class="play-go">Start sorting &rarr;</span>
+        </div>
+      </a>
+    </div>
+    <p class="play-foot reveal">Running one with a class? Each activity has its format page with the full run of show and debrief: <a href="format.html#blind-reveal">Decide Blind, Then Reveal</a> &middot; <a href="format.html#live-under-rule">Live Under the Rule</a> &middot; <a href="format.html#card-sort">Sort with a “Can’t Tell” Pile</a>. The multi-group, instructor-controlled version of Keystone is <a href="https://github.com/wilkth01/phil352-siting">on GitHub</a>.</p>
+  </div>
+</section>
+
+<!-- ============ LIBRARY ============ -->
+<section class="section" id="library">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="kicker">The library</p>
+      <h2>Twenty-six formats, filed by the move underneath.</h2>
+      <p class="lede">Open any format for its run of show, the slots you swap in, the failure modes, and the original runs. Then brainstorm your own version with Claude.</p>
+    </div>
+    <div class="lib-controls" role="group" aria-label="Filter by family" id="chips"></div>
+    <p class="lib-count" id="libCount" aria-live="polite"></p>
+    <div id="lib"></div>
+    <noscript><p>The library list needs JavaScript. Each format also has its own page: start with <a href="format.html#blind-reveal">Decide Blind, Then Reveal</a>.</p></noscript>
+  </div>
+</section>
+
+<!-- ============ BRAINSTORM ============ -->
+<section class="section section-dark" id="brainstorm">
+  <div class="wrap">
+    <div class="bs-grid">
+      <div class="reveal">
+        <p class="kicker">Brainstorm</p>
+        <h2>Try a format on your own topic.</h2>
+        <p class="lede">Every format page has a small brainstorm panel. Tell it your course and your topic, and Claude sketches three versions of that format for your room. Pick one and it writes the run of show.</p>
+        <ol class="bs-steps">
+          <li><div><b>Describe your class.</b> <span>Course, topic or reading, minutes, class size. A sentence of constraints if you have them.</span></div></li>
+          <li><div><b>Get three directions.</b> <span>Each one names the case, the turn where minds change, and the most likely way it goes wrong.</span></div></li>
+          <li><div><b>Develop the one you like.</b> <span>A timed run of show with the cards, prompts and debrief written out.</span></div></li>
+        </ol>
+        <p style="margin-top:1.4rem;font-size:.92rem">It’s deliberately small: a few requests per format, and it only does this one job. For a longer back-and-forth, every panel can hand the same prompt to Claude directly.</p>
+      </div>
+      <div class="mock reveal" aria-hidden="true">
+        <div class="label"><span class="dot-claude"></span> Run the Rule, Then Flip It &middot; Intro to Ethics, Hobbes</div>
+        <div class="idea"><b>The Sovereign’s Rulebook</b><p>Groups act as the sovereign and rule on four petitions using only Leviathan’s laws of nature, restated as numbered steps.</p><p class="t">Turn: the flip petition comes from the sovereign’s own soldier.</p></div>
+        <div class="idea fade"><b>Exit Rights</b><p>Run Hobbes’s test for when a subject may refuse an order on three real conscription cases.</p></div>
+        <div class="idea fade"><b>Contract the Dorm</b><p>Draft a residence-hall covenant under Hobbes’s rules, then flip it onto the RA.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOTES ============ -->
+<section class="section section-alt" id="notes">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="kicker">Notes for a colleague</p>
+      <h2>What held across all twenty-six.</h2>
+    </div>
+    <div class="lessons">
+      <div class="lesson big reveal">
+        <h3>Make them commit before you reveal anything.</h3>
+        <p>The single most reliable move in the library. A group’s choice and its one deciding reason go on the board in its own words before the new fact appears. Without the commitment, students rewrite their reasons after the fact and the reveal teaches nothing.</p>
+      </div>
+      <div class="lesson reveal">
+        <h3>Give the role a real goal.</h3>
+        <p>If the siting team isn’t trying to save money, students hunt for the trick instead of doing the job. The mechanism only shows up when people pursue ordinary ends in good faith.</p>
+      </div>
+      <div class="lesson reveal">
+        <h3>The trick spends after one use.</h3>
+        <p>After the first reveal, tell students the trap up front and ask them to beat it. The second version teaches something the first couldn’t: how hard the trap is to avoid even when you see it.</p>
+      </div>
+      <div class="lesson reveal">
+        <h3>Ban the easy word.</h3>
+        <p>“Greed,” “intentions,” “intersectionality.” Each one lets students skip the argument it names. Lift the ban once the strongest defense is on paper.</p>
+      </div>
+      <div class="lesson reveal">
+        <h3>Hold the line on “we can’t tell.”</h3>
+        <p>Give every sort a pile for what the text doesn’t establish, and every vote a third option. Claiming only what the source supports is a skill, and it has to be practiced.</p>
+      </div>
+      <div class="lesson reveal">
+        <h3>Leave with a tool, not a summary.</h3>
+        <p>A four-question check built across a week is worth more than a recap slide. Students reuse it on new cases, and later in oral exams.</p>
+      </div>
+      <div class="lesson reveal">
+        <h3>Don’t let the reveal become a verdict on the students.</h3>
+        <p>Most careful people make the same choice. The debrief is about the structure that made the choice reasonable, not about who should have known better.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="section section-dark cta">
+  <div class="wrap">
+    <h2 class="reveal">Take one into your next class.</h2>
+    <p class="lede reveal">Pick a format, swap in your own case, and brainstorm the details. Every page has a printable run of show.</p>
+    <div class="cta-row reveal">
+      <a class="btn btn-primary" href="format.html#blind-reveal">Start with Decide Blind, Then Reveal &rarr;</a>
+      <a class="btn btn-ghost" href="#library">See all twenty-six</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4>Active Learning Library</h4>
+        <p>PHIL 350 &middot; PHIL 352 &middot; NURS 702<br>Widener University &middot; Fall 2026</p>
+        <p>Course design, activities and curation by Thomas Wilk.</p>
+      </div>
+      <div>
+        <h4>Made with</h4>
+        <ul>
+          <li>Claude (Anthropic): building the activities and apps, this site, and the brainstorm panel</li>
+          <li>Gemini (Google): the pipeline diagram in the Keystone mechanism map</li>
+        </ul>
+      </div>
+      <div>
+        <h4>On this site</h4>
+        <ul>
+          <li><a href="#play">Four playable activities</a></li>
+          <li><a href="#library">All twenty-six formats</a></li>
+          <li><a href="https://github.com/wilkth01/phil352-siting">Keystone, the classroom server version</a></li>
+          <li><a href="https://wilkth01.github.io/simulation-semester/">The Simulation Semester</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <span>Every case company, county and patient in the playable activities is fictional.</span>
+      <span>Adapt freely; tell me what broke.</span>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="assets/js/home.js"></script>
+<script src="assets/js/chrome.js" defer></script>
+</body>
+</html>

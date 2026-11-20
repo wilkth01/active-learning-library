@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Sort the Conduct · Active Learning Library</title><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Ten things Purdue Pharma and the Sacklers did, and four piles to sort them into."><link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml"><style>html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><style>.shellbar{position:relative;z-index:60;background:#080d17;color:#a7b3c6;font:500 13px/1.2 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}.shellbar .in{max-width:1180px;margin:0 auto;padding:9px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center}.shellbar a{color:#e9eef6;text-decoration:none}.shellbar a:hover{color:#f2c94c}.shellbar a:focus-visible{outline:2px solid #f2c94c;outline-offset:2px}</style></head><body>
+<div class="shellbar"><div class="in"><a href="../index.html#play">&larr; Active Learning Library</a><a href="../format.html#card-sort">How to run it with a class</a></div></div>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&display=swap">
+<style>
+/* Layout: one column, a stack of ten evidence cards, each with four pile buttons; a summary screen shows the piles. One committed dark look, matching the course decks. */
+:root{
+  --bg:#14222F;
+  --panel:#1D3040;
+  --line:#3A4F61;
+  --fg:#F4F1EA;
+  --muted:#A9B8C6;
+  --accent:#E0703A;
+  --accent-ink:#1A0E06;
+  --good:#6FBF8E;
+  --serif:"Source Serif 4",Georgia,serif;
+  --sans:"IBM Plex Sans",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 40px}
+.wrap{max-width:34rem;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.bar{display:flex;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:8px}
+.bar b{color:var(--accent);font-weight:600}
+h1,h2{font-family:var(--serif);font-weight:700;margin:0;line-height:1.1;text-wrap:balance}
+h1{font-size:2.5rem}
+h2{font-size:1.6rem}
+p{margin:0}
+.lede{color:var(--muted)}
+.small{font-size:.82rem;color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+.piles{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.piles li{display:grid;grid-template-columns:1.6rem 1fr;gap:10px;align-items:start}
+.dot{width:1rem;height:1rem;border-radius:50%;margin-top:.3rem;border:2px solid currentColor}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:15px;font-weight:600;font-size:1.05rem;width:100%}
+.secondary{background:transparent;border:1px solid var(--line);border-radius:8px;padding:13px;font-weight:500;width:100%}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.timer{font-family:var(--mono);font-size:1.1rem;font-variant-numeric:tabular-nums;color:var(--fg)}
+.timer.low{color:var(--accent)}
+.progress{display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:8px 0;z-index:3;border-bottom:1px solid var(--line)}
+.track{height:6px;border-radius:3px;background:var(--panel);flex:1;overflow:hidden}
+.track i{display:block;height:100%;background:var(--accent);width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:10px}
+.card.done{border-color:#5B7488}
+.card .head{display:grid;grid-template-columns:2.6rem 1fr;gap:10px;align-items:start}
+.num{font-family:var(--serif);font-size:2rem;font-weight:700;color:var(--accent);line-height:1}
+.txt{font-size:1.05rem;line-height:1.35}
+.pg{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:4px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{background:transparent;border:1px solid var(--line);border-radius:8px;padding:11px 8px;text-align:left;font-size:.9rem;line-height:1.2;min-height:3rem;display:flex;gap:8px;align-items:center}
+.opt .dot{margin:0;flex:none;width:.85rem;height:.85rem}
+.opt[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg);font-weight:600}
+.opt.p-illegal{color:#F08A8A}
+.opt.p-contested{color:#F2B65A}
+.opt.p-uncontested{color:#7FC4E8}
+.opt.p-unknown{color:var(--muted)}
+.opt[aria-pressed="true"]{color:var(--bg)}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.tool{background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:.82rem;color:var(--muted)}
+.tool[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+textarea{width:100%;min-height:4.5rem;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:10px;font:inherit;resize:vertical}
+.pile{display:grid;gap:8px}
+.pile h3{margin:0;font-family:var(--serif);font-size:1.25rem;display:flex;align-items:baseline;gap:8px}
+.pile h3 span{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.pile h3 span:last-child{margin-left:auto}
+.item{display:grid;grid-template-columns:2rem 1fr;gap:8px;padding:10px 0;border-top:1px solid var(--line)}
+.item .n{font-family:var(--serif);font-weight:700;color:var(--accent);font-size:1.2rem}
+.item .why{font-size:.88rem;color:var(--muted);margin-top:4px;font-style:italic}
+.star{color:var(--accent);font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+.empty{color:var(--muted);font-size:.9rem;padding:8px 0;border-top:1px solid var(--line)}
+.lock{font-family:var(--mono);font-size:.8rem;color:var(--good)}
+@media (prefers-reduced-motion:no-preference){.track i{transition:width .2s}}
+</style>
+
+<div class="wrap" id="app"></div>
+
+<script>
+(() => {
+  const app = document.getElementById('app');
+  const DURATION = 12 * 60;
+  const PILES = [
+    {id:'illegal', label:'Illegal for the company', short:'Illegal', note:'A court found it, or the company admitted it.'},
+    {id:'contested', label:'Legal but contested', short:'Legal, contested', note:'No law broken, and reasonable people object.'},
+    {id:'uncontested', label:'Legal and uncontested', short:'Legal, uncontested', note:'Nobody in the room would object.'},
+    {id:'unknown', label:'The article doesn’t say', short:'Article doesn’t say', note:'You can’t tell from the text. Say so; don’t guess.'}
+  ];
+  const CARDS = [
+    [1,'Telling doctors that fewer than one percent of patients become addicted.','p. 9'],
+    [2,'Marketing a severe-pain drug to general practitioners for chronic pain.','p. 8'],
+    [3,'Funding a pain specialist, and a society committee chaired by a paid Purdue speaker.','p. 7'],
+    [4,'Paying clinicians to speak, and flying them to seminars in Boca Raton.','p. 9'],
+    [5,'Using prescriber data to find heavy prescribers, and not alerting authorities.','p. 15'],
+    [6,'Not publishing the Puerto Rico study, and telling an employee not to write up withdrawal data.','p. 13'],
+    [7,'A company spokesman saying a dead patient had abused drugs.','p. 11'],
+    [8,'Settling Pike County for $24 million with no admission, and sealing the record.','p. 19'],
+    [9,'Reformulating the pill, then asking the FDA to refuse generic copies of the old one.','p. 20'],
+    [10,'Lobbying against limits on prescribing, and naming museum wings after the family.','pp. 1, 23']
+  ].map(c => ({id:c[0], text:c[1], page:c[2]}));
+
+  const KEY = 'phil352-sort-conduct-v1';
+  let st = {phase:'intro', place:{}, why:{}, openWhy:{}, hard:null, start:null, locked:null};
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.place) st = s; } catch(e){}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e){} };
+
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const fmt = s => { s = Math.max(0, Math.round(s)); return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); };
+  const placed = () => CARDS.filter(c => st.place[c.id]).length;
+  let tickId = null;
+
+  function bar(right){ return `<div class="bar"><span>PHIL 352 &middot; <b>Sort the conduct</b></span><span>${right}</span></div>`; }
+
+  function intro(){
+    clearInterval(tickId);
+    app.innerHTML = `${bar('Week 9')}
+      <h1>Sort the conduct</h1>
+      <p class="lede">Purdue and the Sacklers, from Keefe’s article. Your group has ten cards and about 12 minutes.</p>
+      <ul class="panel piles">
+        ${PILES.map(p => `<li><span class="dot" style="color:${color(p.id)}"></span><span><b>${p.label}</b><br><span class="small">${p.note}</span></span></li>`).join('')}
+      </ul>
+      <p class="small">One card, one pile. Pick a hardest card and be ready to defend it. Page numbers are the PDF’s; on Perusall, find the passage by topic. Nothing you do here leaves this device.</p>
+      <button class="primary" id="go">${placed() ? 'Continue sorting' : 'Start sorting'}</button>
+      ${placed() ? '<button class="secondary" id="reset">Start over</button>' : ''}`;
+    document.getElementById('go').onclick = () => { if (!st.start) st.start = Date.now(); st.phase = 'sort'; save(); sortScreen(); };
+    const r = document.getElementById('reset'); if (r) r.onclick = reset;
+  }
+
+  function color(id){ return {illegal:'#F08A8A', contested:'#F2B65A', uncontested:'#7FC4E8', unknown:'#A9B8C6'}[id]; }
+
+  function cardHTML(c){
+    const sel = st.place[c.id];
+    const dis = st.locked ? 'disabled' : '';
+    return `<div class="card ${sel ? 'done' : ''}" id="card${c.id}" data-id="${c.id}">
+      <div class="head"><div class="num">${c.id}</div><div><p class="txt">${esc(c.text)}</p><p class="pg">Keefe ${c.page}</p></div></div>
+      <div class="opts" role="group" aria-label="Pile for card ${c.id}">
+        ${PILES.map(p => `<button class="opt p-${p.id}" data-pile="${p.id}" aria-pressed="${sel === p.id}" ${dis}><span class="dot"></span>${p.short}</button>`).join('')}
+      </div>
+      <div class="tools">
+        <button class="tool" data-act="hard" aria-pressed="${st.hard === c.id}" ${dis}>${st.hard === c.id ? '★ Hardest card' : '☆ Mark hardest'}</button>
+        <button class="tool" data-act="why" aria-pressed="${!!st.openWhy[c.id] || !!st.why[c.id]}">Reason</button>
+      </div>
+      ${(st.openWhy[c.id] || st.why[c.id]) ? `<textarea id="why${c.id}" placeholder="Why this pile? One sentence." ${dis}>${esc(st.why[c.id] || '')}</textarea>` : ''}
+    </div>`;
+  }
+
+  function sortScreen(){
+    clearInterval(tickId);
+    app.innerHTML = `<div class="progress"><span class="timer" id="timer">12:00</span><div class="track"><i id="trk"></i></div><span class="small" id="cnt"></span></div>
+      ${st.locked ? '<p class="lock">Sort locked. Cards can no longer be moved.</p>' : '<p class="small">If the article doesn’t say, say so. Don’t guess.</p>'}
+      <div id="cards" style="display:grid;gap:12px">${CARDS.map(cardHTML).join('')}</div>
+      <button class="primary" id="done">See our piles</button>`;
+    const cards = document.getElementById('cards');
+    cards.addEventListener('click', e => {
+      const card = e.target.closest('.card'); if (!card) return;
+      const id = +card.dataset.id;
+      const opt = e.target.closest('.opt'), tool = e.target.closest('.tool');
+      if (opt && !st.locked){ st.place[id] = opt.dataset.pile; }
+      else if (tool && tool.dataset.act === 'hard' && !st.locked){ st.hard = st.hard === id ? null : id; }
+      else if (tool && tool.dataset.act === 'why'){ st.openWhy[id] = st.why[id] ? true : !st.openWhy[id]; }
+      else return;
+      save();
+      if (tool && tool.dataset.act === 'hard'){ refreshAll(); } else { replace(id); }
+      meter();
+      if (tool && tool.dataset.act === 'why'){ const t = document.getElementById('why' + id); if (t) t.focus(); }
+    });
+    cards.addEventListener('input', e => {
+      if (e.target.tagName === 'TEXTAREA'){ const id = +e.target.id.replace('why',''); st.why[id] = e.target.value; save(); }
+    });
+    document.getElementById('done').onclick = () => { st.phase = 'summary'; save(); summary(); };
+    meter(); tick(); tickId = setInterval(tick, 500);
+  }
+  function replace(id){
+    const el = document.getElementById('card' + id); if (!el) return;
+    const t = document.createElement('div'); t.innerHTML = cardHTML(CARDS.find(c => c.id === id));
+    el.replaceWith(t.firstElementChild);
+  }
+  function refreshAll(){ CARDS.forEach(c => replace(c.id)); }
+  function meter(){
+    const n = placed();
+    const trk = document.getElementById('trk'), cnt = document.getElementById('cnt');
+    if (trk) trk.style.width = (n / CARDS.length * 100) + '%';
+    if (cnt) cnt.textContent = n + ' of 10 placed';
+  }
+  function tick(){
+    const el = document.getElementById('timer'); if (!el) return;
+    const left = DURATION - (Date.now() - (st.start || Date.now())) / 1000;
+    el.textContent = left > 0 ? fmt(left) : 'Time';
+    el.classList.toggle('low', left < 120);
+  }
+
+  function summary(){
+    clearInterval(tickId);
+    const n = placed();
+    app.innerHTML = `${bar(st.locked ? 'Locked ' + st.locked : 'Draft')}
+      <h2>Your group’s piles</h2>
+      <p class="lede">${n} of 10 cards placed. Hold this screen up for the debrief.</p>
+      ${PILES.map(p => {
+        const cs = CARDS.filter(c => st.place[c.id] === p.id);
+        return `<section class="pile"><h3><span style="color:${color(p.id)}">●</span> ${p.label} <span>${cs.length}</span></h3>
+          ${cs.length ? cs.map(c => `<div class="item"><div class="n">${c.id}</div><div><p>${esc(c.text)}</p>${st.hard === c.id ? '<p class="star">★ Our hardest card</p>' : ''}${st.why[c.id] ? `<p class="why">${esc(st.why[c.id])}</p>` : ''}</div></div>`).join('') : '<p class="empty">No cards here.</p>'}</section>`;
+      }).join('')}
+      ${n < 10 ? `<p class="small">Unplaced: ${CARDS.filter(c => !st.place[c.id]).map(c => c.id).join(', ')}</p>` : ''}
+      <div class="row2"><button class="secondary" id="back">${st.locked ? 'View cards' : 'Back to sorting'}</button>
+      ${st.locked ? '<button class="secondary" id="reset">Start over</button>' : '<button class="primary" id="lock">Lock our sort</button>'}</div>`;
+    document.getElementById('back').onclick = () => { st.phase = 'sort'; save(); sortScreen(); };
+    const l = document.getElementById('lock'); if (l) l.onclick = () => {
+      st.locked = new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}); save(); summary();
+    };
+    const r = document.getElementById('reset'); if (r) r.onclick = reset;
+  }
+
+  function reset(){
+    st = {phase:'intro', place:{}, why:{}, openWhy:{}, hard:null, start:null, locked:null};
+    save(); intro();
+  }
+
+  if (st.phase === 'sort') sortScreen(); else if (st.phase === 'summary') summary(); else intro();
+})();
+</script>
+
+</body></html>

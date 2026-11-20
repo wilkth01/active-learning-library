@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Making Rate · Active Learning Library</title><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Two stow shifts under an automatic quota set from your own best fifteen seconds. Then the notice, and the appeal."><link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml"><style>html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style><style>.shellbar{position:relative;z-index:60;background:#080d17;color:#a7b3c6;font:500 13px/1.2 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}.shellbar .in{max-width:1180px;margin:0 auto;padding:9px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center}.shellbar a{color:#e9eef6;text-decoration:none}.shellbar a:hover{color:#f2c94c}.shellbar a:focus-visible{outline:2px solid #f2c94c;outline-offset:2px}</style></head><body>
+<div class="shellbar"><div class="in"><a href="../index.html#play">&larr; Active Learning Library</a><a href="../format.html#live-under-rule">How to run it with a class</a></div></div>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Chivo+Mono:wght@400;600;700&display=swap">
+<style>
+/* Layout: a single-column handheld scanner console, one screen per shift state. Deliberately one dark look (a warehouse handheld). */
+:root{
+  --bg:#14181c;          /* scanner housing */
+  --panel:#1d2329;       /* screen panels */
+  --line:#2f3841;        /* dividers */
+  --fg:#e8ecef;          /* readout text */
+  --muted:#93a0ab;       /* labels */
+  --accent:#f2c230;      /* safety yellow */
+  --accent-ink:#1a1500;  /* text on yellow */
+  --ok:#3fbf7f;
+  --warn:#f29d38;
+  --bad:#e5484d;
+  --display:"Archivo","Arial Narrow",Arial,sans-serif;
+  --mono:"Chivo Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--display);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:30rem;margin:0 auto;padding-inline:16px;padding-block:14px 28px;display:flex;flex-direction:column;gap:14px;min-height:100%;box-sizing:border-box}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--line);padding-bottom:8px}
+.bar b{color:var(--accent);font-weight:700}
+h1,h2{font-stretch:75%;font-weight:800;text-transform:uppercase;letter-spacing:.02em;margin:0;text-wrap:balance;line-height:1.05}
+h1{font-size:2.4rem}
+h2{font-size:1.6rem}
+p{margin:0}
+.lede{color:var(--muted);font-size:.98rem}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px}
+.rules{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.rules li{display:grid;grid-template-columns:2.2rem 1fr;gap:8px;align-items:start;font-size:.95rem}
+.rules .k{font-family:var(--mono);font-size:.72rem;color:var(--accent);border:1px solid var(--accent);border-radius:3px;text-align:center;padding:2px 0;margin-top:2px}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:6px;padding:16px;font-weight:800;font-stretch:80%;text-transform:uppercase;letter-spacing:.06em;font-size:1.1rem;width:100%}
+.secondary{background:transparent;border:1px solid var(--line);border-radius:6px;padding:14px;font-weight:700;font-stretch:80%;text-transform:uppercase;letter-spacing:.06em;width:100%;color:var(--fg)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* HUD */
+.hud{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.hud > div{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:0}
+.hud .l{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.hud .v{font-family:var(--mono);font-size:1.35rem;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.meter{height:14px;border-radius:3px;background:var(--panel);border:1px solid var(--line);overflow:hidden;position:relative}
+.meter i{position:absolute;inset:0 auto 0 0;background:var(--ok);width:0;transition:width .25s linear,background .25s}
+.meter::after{content:"";position:absolute;top:-2px;bottom:-2px;left:calc(100%/1.2);width:2px;background:var(--fg);opacity:.8}
+.meterlabel{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-top:4px}
+.flags{display:flex;gap:6px;flex-wrap:wrap;min-height:1.6rem}
+.chip{font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;border-radius:3px;padding:3px 7px;border:1px solid currentColor}
+.chip.tot{color:var(--bad)}
+.chip.hold{color:var(--warn)}
+
+/* Item card */
+.item{background:var(--panel);border:2px solid var(--line);border-radius:6px;padding:14px;display:grid;gap:6px;position:relative}
+.item.heavy{border-color:var(--warn)}
+.item .name{font-size:1.25rem;font-weight:700;font-stretch:90%}
+.item .meta{font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+.item .to{display:flex;align-items:baseline;gap:10px}
+.item .to span{font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.item .to b{font-family:var(--mono);font-size:2.3rem;color:var(--accent);letter-spacing:.04em}
+.heavytag{display:none;font-family:var(--mono);font-size:.72rem;color:var(--warn);text-transform:uppercase;letter-spacing:.06em}
+.item.heavy .heavytag{display:block}
+.teamlift{display:none;margin-top:4px;background:transparent;border:1px solid var(--warn);color:var(--warn);border-radius:4px;padding:10px;font-weight:700;font-stretch:85%;text-transform:uppercase;letter-spacing:.05em}
+.item.heavy .teamlift{display:block}
+.item.lifted .teamlift{display:none}
+.item.lifted .heavytag::after{content:" · team lift done";color:var(--ok)}
+.bins{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.bins button{background:#262e36;border:1px solid var(--line);border-radius:6px;padding:18px 0;font-family:var(--mono);font-weight:700;font-size:1.15rem;color:var(--fg)}
+.bins button:active{background:var(--accent);color:var(--accent-ink)}
+.toast{min-height:1.4rem;font-family:var(--mono);font-size:.8rem;text-align:center;color:var(--bad)}
+.toast.good{color:var(--ok)}
+
+/* Overlays */
+.overlay{position:fixed;inset:0;background:rgba(10,12,14,.88);display:flex;align-items:center;justify-content:center;padding:16px;z-index:5}
+.overlay .box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;max-width:26rem;width:100%;display:grid;gap:14px}
+.count{font-family:var(--mono);font-size:3rem;font-weight:700;color:var(--accent);text-align:center;font-variant-numeric:tabular-nums}
+
+/* Notice */
+.notice{background:#f3f1ea;color:#1b1b1b;border-radius:4px;padding:18px;display:grid;gap:12px;font-family:var(--mono);font-size:.82rem}
+.notice h2{font-family:var(--display);color:#1b1b1b;font-size:1.35rem}
+.notice .stamp{font-family:var(--display);font-weight:800;font-stretch:75%;text-transform:uppercase;letter-spacing:.05em;color:#b3261e;border:3px solid #b3261e;padding:4px 10px;justify-self:start;transform:rotate(-2deg);font-size:1.15rem}
+.notice .stamp.ok{color:#1d6b40;border-color:#1d6b40}
+.notice dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0}
+.notice dt{color:#5b5b5b}
+.notice dd{margin:0;font-weight:700;font-variant-numeric:tabular-nums}
+.notice .fine{color:#444;font-size:.75rem;border-top:1px solid #cfcbbf;padding-top:10px}
+textarea{width:100%;box-sizing:border-box;min-height:7rem;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:10px;font:inherit}
+.reply{font-family:var(--mono);font-size:.85rem;border-left:3px solid var(--muted);padding:8px 12px;color:var(--fg)}
+
+/* Summary */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px;min-width:0}
+.stat .l{font-family:var(--mono);font-size:.64rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.stat .v{font-family:var(--mono);font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums}
+.stat.wide{grid-column:1/-1}
+.v.bad{color:var(--bad)} .v.ok{color:var(--ok)} .v.warn{color:var(--warn)}
+.small{font-size:.8rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.meter i{transition:none}}
+</style>
+
+<div class="wrap" id="app" aria-live="polite"></div>
+
+<script>
+(() => {
+  const app = document.getElementById('app');
+  const SHIFT1 = 60, SHIFT2 = 75, IDLE = 5, RESTROOM_AT = 30, RESTROOM_LOCK = 10, TEAM_WAIT = 6;
+  const BINS = ['A1','A2','A3','A4','B1','B2','B3','B4'];
+  const LIGHT = [
+    ['Protein powder','2 lb tub'],['Inflatable unicorn pool float','boxed'],['Laptop','14-inch'],['Makeup palette','12 shades'],
+    ['Himalayan sea salt','grinder'],['Plastic toy car','3-pack'],['Phone case','clear'],['Yoga mat','rolled'],
+    ['Coffee pods','24 ct'],['Paper towels','6 rolls'],['Headphones','wireless'],['Board game','family'],
+    ['Paperback novel','1 ea'],['Athletic socks','6 pair'],['Printer ink','black'],['LED bulbs','4-pack'],
+    ['Phone charger','USB-C'],['Water bottle','32 oz'],['Puzzle','1,000 pc'],['Sunscreen','SPF 50']
+  ];
+  const HEAVY = [['Dog food','40 lb case'],['Cat litter','35 lb jug'],['Bottled water','24-pack, 38 lb'],['Kettlebell','35 lb'],['Dog food','40 lb case'],['Bottled water','24-pack, 38 lb']];
+
+  // Same item sequence on every phone: no one gets a harder shift than anyone else.
+  function buildSeq(seed){
+    let s = seed; const rnd = () => (s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296;
+    const out = []; let h = 0;
+    for (let i = 0; i < 400; i++){
+      if (i % (seed === 19 ? 5 : 6) === (seed === 19 ? 4 : 5)){ const it = HEAVY[h++ % HEAVY.length]; out.push({name:it[0], meta:it[1], heavy:true, bin:BINS[Math.floor(rnd()*8)]}); }
+      else { const it = LIGHT[Math.floor(rnd()*LIGHT.length)]; out.push({name:it[0], meta:it[1], heavy:false, bin:BINS[Math.floor(rnd()*8)]}); }
+    }
+    return out;
+  }
+
+  const badge = 'Associate ' + String(Math.floor(1000 + Math.random()*9000));
+  let st;
+  function fresh(){
+    st = { shift:0, seq:null, idx:0, t0:0, scans:[], lastScan:0, tot:0, locked:false, lockUntil:0, lockMsg:'',
+           expectation:null, heavySeen:0, solo:0, team:0, wrong:0, restroom:null, restroomShown:false,
+           s2Units:0, appealed:false, timer:null, liftedCurrent:false };
+  }
+  fresh();
+
+  let wake = null;
+  async function keepAwake(){ try{ if ('wakeLock' in navigator) wake = await navigator.wakeLock.request('screen'); }catch(e){} }
+
+  const fmt = s => { s = Math.max(0, Math.round(s)); return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); };
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const bar = (right) => `<div class="bar"><span>PACE · Building 4 · <b>${badge}</b></span><span>${right}</span></div>`;
+
+  // ---------- Screens ----------
+  function intro(){
+    fresh();
+    app.innerHTML = `${bar('Stow')}
+      <h1>Making Rate</h1>
+      <p class="lede">You are a stower. Items arrive one at a time. Put each one in the right bin as fast as you can.</p>
+      <ul class="panel rules">
+        <li><span class="k">TAP</span><span>Tap the bin that matches the code on the item.</span></li>
+        <li><span class="k">40 LB</span><span>Heavy items require a team lift under safety policy. Request one before you stow.</span></li>
+        <li><span class="k">×2</span><span>Two shifts. The first is training. The second is peak.</span></li>
+      </ul>
+      <p class="small">Nothing you do here leaves your phone. No names, no data sent.</p>
+      <button class="primary" id="go">Start training shift</button>`;
+    document.getElementById('go').onclick = () => countdown(1);
+  }
+
+  function countdown(n){
+    keepAwake();
+    let c = 3;
+    app.innerHTML = `${bar(n===1?'Training':'Peak')}<div class="overlay"><div class="box"><p class="lede" style="text-align:center">${n===1?'Training shift · 60 seconds':'Peak shift · 75 seconds'}</p><div class="count" id="cd">3</div></div></div>`;
+    const t = setInterval(() => { c--; const el = document.getElementById('cd'); if (c > 0 && el) el.textContent = c; else { clearInterval(t); startShift(n); } }, 800);
+  }
+
+  function startShift(n){
+    st.shift = n; st.seq = buildSeq(n === 1 ? 7 : 19); st.idx = 0; st.scans = []; st.tot = 0;
+    st.t0 = performance.now(); st.lastScan = st.t0; st.locked = false; st.liftedCurrent = false;
+    const dur = n === 1 ? SHIFT1 : SHIFT2;
+    app.innerHTML = `${bar(n===1?'Training shift':'Peak shift')}
+      <div class="hud">
+        <div><div class="l">Time left</div><div class="v" id="left">${fmt(dur)}</div></div>
+        <div><div class="l">Units</div><div class="v" id="units">0</div></div>
+        <div><div class="l">${n===1?'Rate / min':'Of expectation'}</div><div class="v" id="rate">${n===1?'—':'—'}</div></div>
+      </div>
+      ${n===2?`<div><div class="meter"><i id="meter"></i></div><div class="meterlabel"><span>0%</span><span>100%</span><span>120%</span></div></div>`:''}
+      <div class="flags" id="flags"></div>
+      <div class="item" id="item">
+        <div class="heavytag">Heavy · team lift required</div>
+        <div class="name" id="iname"></div>
+        <div class="meta" id="imeta"></div>
+        <div class="to"><span>Stow to</span><b id="ibin"></b></div>
+        <button class="teamlift" id="team">Request team lift</button>
+      </div>
+      <div class="bins" id="bins">${BINS.map(b => `<button data-b="${b}">${b}</button>`).join('')}</div>
+      <div class="toast" id="toast"></div>`;
+    document.getElementById('bins').addEventListener('click', e => { const b = e.target.closest('button'); if (b) stow(b.dataset.b); });
+    document.getElementById('team').onclick = teamLift;
+    showItem();
+    st.timer = setInterval(tick, 100);
+  }
+
+  function showItem(){
+    const it = st.seq[st.idx]; st.liftedCurrent = false;
+    const card = document.getElementById('item'); if (!card) return;
+    card.classList.toggle('heavy', it.heavy); card.classList.remove('lifted');
+    document.getElementById('iname').textContent = it.name;
+    document.getElementById('imeta').textContent = it.meta;
+    document.getElementById('ibin').textContent = it.bin;
+  }
+
+  function toast(msg, good){ const t = document.getElementById('toast'); if (!t) return; t.textContent = msg; t.className = 'toast' + (good ? ' good' : ''); clearTimeout(toast._t); toast._t = setTimeout(() => { if (t) t.textContent = ''; }, 1200); }
+
+  function lock(seconds, msg, after){
+    st.locked = true;
+    const ov = document.createElement('div'); ov.className = 'overlay'; ov.id = 'lockov';
+    ov.innerHTML = `<div class="box"><p class="lede" style="text-align:center">${msg}</p><div class="count" id="lockc">${seconds}</div></div>`;
+    document.body.appendChild(ov);
+    let left = seconds;
+    const t = setInterval(() => { left--; const c = document.getElementById('lockc'); if (c) c.textContent = left;
+      if (left <= 0){ clearInterval(t); ov.remove(); st.locked = false; if (after) after(); } }, 1000);
+  }
+
+  function teamLift(){
+    if (st.locked) return;
+    lock(TEAM_WAIT, 'Waiting for a teammate to help lift…', () => {
+      st.liftedCurrent = true; const card = document.getElementById('item'); if (card) card.classList.add('lifted');
+    });
+  }
+
+  function stow(b){
+    if (st.locked || !st.seq) return;
+    const it = st.seq[st.idx]; const now = performance.now();
+    if (b !== it.bin){ st.wrong++; toast('Wrong location. Rescan.'); st.locked = true; setTimeout(() => st.locked = false, 700); return; }
+    if (it.heavy){ st.heavySeen++; if (st.liftedCurrent) st.team++; else st.solo++; }
+    st.scans.push((now - st.t0)/1000); st.lastScan = now; st.idx++;
+    document.getElementById('units').textContent = st.scans.length;
+    showItem();
+  }
+
+  function tick(){
+    const now = performance.now(); const el = (now - st.t0)/1000; const dur = st.shift === 1 ? SHIFT1 : SHIFT2;
+    // Time Off Task: any stretch past IDLE seconds without a scan, whatever the reason.
+    const gap = (now - st.lastScan)/1000;
+    if (gap > IDLE) st.tot += 0.1;
+    const left = document.getElementById('left'); if (left) left.textContent = fmt(dur - el);
+    const flags = document.getElementById('flags');
+    if (flags){
+      let f = '';
+      if (st.shift === 2 && st.tot > 0.05) f += `<span class="chip tot">Time off task ${fmt(st.tot)}</span>`;
+      if (st.restroom === 'held') f += `<span class="chip hold">Holding</span>`;
+      if (flags.innerHTML !== f) flags.innerHTML = f;
+    }
+    const rateEl = document.getElementById('rate');
+    if (st.shift === 1){
+      if (rateEl && el > 3) rateEl.textContent = Math.round(st.scans.length / el * 60);
+    } else {
+      const win = Math.min(20, el); const recent = st.scans.filter(s => s > el - 20).length;
+      const rate = win > 2 ? recent / win * 60 : 0; const pct = st.expectation ? rate / st.expectation * 100 : 0;
+      if (rateEl && el > 2){ rateEl.textContent = Math.round(pct) + '%'; rateEl.style.color = pct >= 100 ? 'var(--ok)' : pct >= 90 ? 'var(--warn)' : 'var(--bad)'; }
+      const m = document.getElementById('meter');
+      if (m && el > 2){ m.style.width = Math.min(100, pct / 1.2) + '%'; m.style.background = pct >= 100 ? 'var(--ok)' : pct >= 90 ? 'var(--warn)' : 'var(--bad)'; }
+      if (!st.restroomShown && el >= RESTROOM_AT && !st.locked){ st.restroomShown = true; restroomPrompt(); }
+    }
+    if (el >= dur){ clearInterval(st.timer); ['lockov','rr'].forEach(id => { const o = document.getElementById(id); if (o) o.remove(); }); st.locked = false; st.shift === 1 ? endShift1() : endShift2(); }
+  }
+
+  function restroomPrompt(){
+    st.locked = true;
+    const ov = document.createElement('div'); ov.className = 'overlay'; ov.id = 'rr';
+    ov.innerHTML = `<div class="box"><h2>You need the restroom</h2><p class="lede">The nearest one is on the other side of the building.</p>
+      <div class="row2"><button class="secondary" id="rgo">Go (about ${RESTROOM_LOCK} sec)</button><button class="primary" id="rhold">Hold it</button></div></div>`;
+    document.body.appendChild(ov);
+    document.getElementById('rgo').onclick = () => { ov.remove(); st.restroom = 'went'; lock(RESTROOM_LOCK, 'Walking to the restroom and back…'); };
+    document.getElementById('rhold').onclick = () => { ov.remove(); st.restroom = 'held'; st.locked = false; };
+  }
+
+  function bestWindow(scans, w){ let best = 0, j = 0; for (let i = 0; i < scans.length; i++){ while (scans[i] - scans[j] > w) j++; best = Math.max(best, i - j + 1); } return best; }
+
+  function endShift1(){
+    const units = st.scans.length; const avg = units / SHIFT1 * 60;
+    // Expectation = this associate's own best 15-second pace. Not shown to the associate.
+    const best = bestWindow(st.scans, 15) * 4;
+    st.expectation = Math.max(best, Math.ceil(avg * 1.15), 12);
+    st.s1 = { units, avg };
+    app.innerHTML = `${bar('Training complete')}
+      <h2>Training shift complete</h2>
+      <div class="stats">
+        <div class="stat"><div class="l">Units stowed</div><div class="v">${units}</div></div>
+        <div class="stat"><div class="l">Your rate</div><div class="v">${Math.round(avg)}<span class="small"> / min</span></div></div>
+        <div class="stat wide"><div class="l">Peak expectation</div><div class="v" style="color:var(--accent)">${st.expectation}<span class="small"> units / min</span></div><p class="small">Your productivity performance expectation has been calculated.</p></div>
+      </div>
+      <p class="lede">At peak, your rate is measured continuously. Gaps between scans longer than ${IDLE} seconds are recorded as Time Off Task.</p>
+      <button class="primary" id="go">Start peak shift</button>`;
+    document.getElementById('go').onclick = () => countdown(2);
+  }
+
+  function endShift2(){
+    st.s2Units = st.scans.length;
+    const required = st.expectation * SHIFT2 / 60;
+    st.pct = st.s2Units / required * 100;
+    notice();
+  }
+
+  function notice(){
+    const pass = st.pct >= 100;
+    const raised = pass ? Math.ceil(st.expectation * 1.06) : null;
+    const date = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+    app.innerHTML = `${bar('Notice')}
+      <div class="notice">
+        <h2>Associate Performance Notice</h2>
+        <span class="stamp ${pass?'ok':''}">${pass ? 'Meets expectation' : 'Final written warning'}</span>
+        <dl>
+          <dt>Associate</dt><dd>${badge.replace('Associate ','')}</dd>
+          <dt>Date</dt><dd>${date}</dd>
+          <dt>Process</dt><dd>Stow · peak</dd>
+          <dt>Units</dt><dd>${st.s2Units}</dd>
+          <dt>Expectation</dt><dd>${st.expectation} / min</dd>
+          <dt>Achieved</dt><dd>${st.pct.toFixed(2)}%</dd>
+          <dt>Time off task</dt><dd>${fmt(st.tot)}</dd>
+        </dl>
+        <p>${pass
+          ? `Your expectation for your next shift has been updated to ${raised} units per minute.`
+          : `You are expected to meet 100 percent of the productivity performance expectation. Further shortfalls may result in separation.`}</p>
+        <p class="fine">Generated automatically by PACE. No manager reviewed this notice before it was issued.</p>
+      </div>
+      <div class="row2"><button class="secondary" id="appeal">Appeal</button><button class="primary" id="ack">Acknowledge</button></div>`;
+    document.getElementById('ack').onclick = summary;
+    document.getElementById('appeal').onclick = appeal;
+  }
+
+  function appeal(){
+    app.innerHTML = `${bar('Appeal')}
+      <h2>Submit an appeal</h2>
+      <p class="lede">Explain why this notice should be reconsidered.</p>
+      <label for="why" class="small">Your explanation</label>
+      <textarea id="why" placeholder="Type here"></textarea>
+      <button class="primary" id="send">Submit appeal</button>`;
+    document.getElementById('send').onclick = () => {
+      st.appealed = true; const text = document.getElementById('why').value.trim();
+      app.innerHTML = `${bar('Appeal received')}
+        <h2>Appeal received</h2>
+        ${text ? `<p class="small">You wrote:</p><p class="reply">${esc(text)}</p>` : ''}
+        <div class="panel"><p>Thank you for your feedback. Associate performance is measured and evaluated over a long period of time.</p></div>
+        <p class="small">Status of notice: unchanged.</p>
+        <button class="primary" id="ok">Continue</button>`;
+      document.getElementById('ok').onclick = summary;
+    };
+  }
+
+  function summary(){
+    const pass = st.pct >= 100;
+    app.innerHTML = `${bar('End of shift')}
+      <h2>Your shift, for class</h2>
+      <p class="lede">Keep this screen open. You'll be asked about it by show of hands.</p>
+      <div class="stats">
+        <div class="stat"><div class="l">Of expectation</div><div class="v ${pass?'ok':'bad'}">${st.pct.toFixed(1)}%</div></div>
+        <div class="stat"><div class="l">Notice</div><div class="v ${pass?'ok':'bad'}" style="font-size:1.05rem">${pass?'Met (bar raised)':'Final warning'}</div></div>
+        <div class="stat"><div class="l">Time off task</div><div class="v ${st.tot>0.05?'warn':''}">${fmt(st.tot)}</div></div>
+        <div class="stat"><div class="l">Restroom</div><div class="v" style="font-size:1.05rem">${st.restroom==='went'?'Went':st.restroom==='held'?'Held it':'No prompt'}</div></div>
+        <div class="stat"><div class="l">Heavy items lifted alone</div><div class="v ${st.solo?'warn':''}">${st.solo} <span class="small">of ${st.heavySeen}</span></div></div>
+        <div class="stat"><div class="l">Appealed</div><div class="v" style="font-size:1.05rem">${st.appealed?'Yes':'No'}</div></div>
+      </div>
+      <button class="secondary" id="again">Start over</button>`;
+    document.getElementById('again').onclick = intro;
+    try{ if (wake) wake.release(); }catch(e){}
+  }
+
+  intro();
+})();
+</script>
+
+</body></html>

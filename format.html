@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Format · Active Learning Library</title>
+<meta name="description" content="One classroom format from the Active Learning Library: how it runs, why it works, what goes wrong, the original runs, and a Claude brainstorm for adapting it.">
+<meta name="theme-color" content="#0d1422">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav is-static" id="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="Active Learning Library, home">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect x="3" y="6" width="26" height="18" rx="2" stroke="#f2c94c" stroke-width="1.6"/><path d="M8 12h10M8 16h14M8 20h7" stroke="#f2c94c" stroke-width="1.3" stroke-linecap="round" opacity=".8"/><path d="M11 24l-3 5M21 24l3 5" stroke="#f2c94c" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Active Learning Library
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">Menu</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#play">Play one</a></li>
+      <li><a href="index.html#library">The library</a></li>
+      <li><a href="#brainstorm">Brainstorm this</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="main">
+  <section class="fhero" id="fhero">
+    <div class="wrap">
+      <div class="crumbs"><a href="index.html#library">The library</a> &nbsp;/&nbsp; <span class="fam-name" id="famName"></span></div>
+      <h1 id="fName">Loading…</h1>
+      <p class="lede" id="fOne"></p>
+      <div class="tags" id="fTags"></div>
+    </div>
+  </section>
+
+  <div class="wrap fbody">
+    <article id="fArticle"></article>
+    <aside class="bs" id="brainstorm" aria-label="Brainstorm this format with Claude"></aside>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="fine" style="margin-top:0;padding-top:0;border-top:0">
+      <span>Active Learning Library &middot; Thomas Wilk &middot; Widener University &middot; Fall 2026</span>
+      <span><a href="index.html#library">All formats</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script type="module" src="assets/js/format.js"></script>
+<script src="assets/js/chrome.js" defer></script>
+</body>
+</html>

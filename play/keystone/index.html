@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Keystone · Active Learning Library</title>
+<meta name="description" content="A siting meeting for a waste-transfer facility: four sites, fifteen minutes, one recommendation. Then the census appendix.">
+<link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .shellbar{background:#080d17;color:#a7b3c6;font:500 13px/1.2 "IBM Plex Sans",system-ui,sans-serif}
+  .shellbar .in{max-width:1180px;margin:0 auto;padding:9px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+  .shellbar a,.shellbar button{color:#e9eef6;text-decoration:none;background:none;border:0;font:inherit;cursor:pointer;padding:0}
+  .shellbar a:hover,.shellbar button:hover{color:#f2c94c}
+  .shellbar .r{display:flex;gap:16px}
+  .intro-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:start}
+  @media (max-width:860px){.intro-grid{grid-template-columns:1fr}}
+  .mins{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px}
+  .mins button{min-width:64px}
+  .mins button.sel{outline:3px solid var(--accent, #e0703a);outline-offset:1px}
+</style>
+</head>
+<body>
+<nav class="shellbar" aria-label="Site"><div class="in"><a href="../../index.html#play">&larr; Active Learning Library</a><span class="r"><a href="map.html">Mechanism map</a><a href="../../format.html#blind-reveal">How to run it with a class</a><button type="button" id="resetAll">Start over</button></span></div></nav>
+<header class="topbar">
+  <div class="brand"><div class="logo"></div><div>Tessera Environmental Services<small>Project Keystone · Site Selection Meeting</small></div></div>
+  <div class="spacer"></div>
+  <span id="groupPill" class="pill hidden"></span>
+  <span id="statusPill" class="pill hidden"></span>
+  <div id="clock" class="clock hidden">--:--</div>
+</header>
+<main class="wrap" id="app"></main>
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
