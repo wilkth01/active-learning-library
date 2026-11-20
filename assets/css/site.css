@@ -194,6 +194,10 @@ section { position: relative; }
 .course-list li { display: grid; grid-template-columns: 5.5rem 1fr; gap: .6rem; align-items: baseline; }
 .course-list .code { font-family: var(--f-mono); font-size: .78rem; color: var(--text); }
 @media (max-width: 860px) { .idea-grid { grid-template-columns: 1fr; } }
+.themes { list-style: none; margin: 0 0 1.4em; padding: 0; display: grid; gap: .15rem; }
+.themes a { display: block; padding: .55rem .2rem .55rem 1.15rem; border-left: 3px solid var(--fc); text-decoration: none; color: var(--text-soft); font-size: 1rem; line-height: 1.5; border-radius: 0 6px 6px 0; transition: background .2s; }
+.themes a:hover { background: rgba(255,255,255,.55); color: var(--text); }
+.themes b { color: var(--ink); font-weight: 600; margin-right: .2rem; }
 
 /* ---------- play (in-browser activities) ---------- */
 .play-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
